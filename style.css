@@ -1,0 +1,172 @@
+/* global rules */
+:root {
+  --dark: #374151;
+  --darker: #1f2937;
+  --darkest: #111827;
+  --grey: #6b7280;
+  --pink: #ec4899;
+  --purple: #8b5cf6;
+  --light: #eee;
+  --transition: 0.3s;
+}
+body {
+  background-color: var(--dark);
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
+button {
+  border: 0;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  cursor: pointer;
+}
+input {
+  border: 0;
+  padding: 10px;
+  background-color: transparent;
+}
+input:focus-visible {
+  outline: 0;
+}
+button:hover {
+  opacity: 0.8;
+}
+button:active {
+  opacity: 0.6;
+}
+/* end global rules */
+h1 {
+  color: var(--grey);
+  font-weight: lighter;
+}
+h1 + p,
+h2 + p {
+  background-color: #f44336;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin: 0;
+  font-weight: 700;
+  opacity: 0;
+  transition: var(--transition);
+  -webkit-transition: var(--transition);
+  -moz-transition: var(--transition);
+  -ms-transition: var(--transition);
+  -o-transition: var(--transition);
+  height: 0;
+}
+h1 + p.show,
+h2 + p.show {
+  opacity: 1;
+  height: 20px;
+}
+.enter {
+  display: flex;
+  gap: 20px;
+  padding: 10px 0;
+}
+.enter input {
+  padding: 15px 20px;
+  flex: 1;
+  background-color: var(--darker);
+  border-radius: 10px;
+  caret-color: var(--pink);
+  color: var(--light);
+}
+.enter #new-task-submit {
+  color: var(--pink);
+  font-size: 1.25rem;
+  font-weight: 700;
+  background-image: linear-gradient(to right, var(--pink), var(--purple));
+  transition: var(--transition);
+  -webkit-transition: var(--transition);
+  -moz-transition: var(--transition);
+  -ms-transition: var(--transition);
+  -o-transition: var(--transition);
+}
+.tasks h2 {
+  color: var(--grey);
+  font-weight: lighter;
+}
+.tasks .content {
+}
+.content .task {
+  display: flex;
+  gap: 10px;
+  background-color: var(--darkest);
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 10px;
+}
+.content .task input {
+  font-size: 15px;
+  flex: 1;
+  color: var(--light);
+}
+@media (max-width: 767px) {
+  .content .task input,
+  p {
+    font-size: 10px;
+  }
+  button {
+    font-size: 10px !important;
+    font-weight: 900 !important;
+  }
+  input {
+    font-size: 10px !important;
+  }
+}
+.content .task input::placeholder {
+  color: var(--light);
+}
+.content .task #edit,
+.content .task #delete {
+  font-size: 15px;
+  font-weight: 700;
+}
+.content .task #edit {
+  background-image: linear-gradient(to right, var(--pink), var(--purple));
+}
+.content .task #delete {
+  background-color: #f44336;
+}
+.content .task input:not(:read-only) {
+  color: var(--pink);
+}
