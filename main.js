@@ -101,7 +101,10 @@ function editeTask(e) {
       let availableTasks = document.querySelectorAll(".task input");
       availableTasks.forEach((availableTask) => {
         if (availableTask !== e.parentElement.firstChild) {
-          if (e.parentElement.firstChild.value === availableTask.value) {
+          if (
+            e.parentElement.firstChild.value.toString().split(" ").join("") ===
+            availableTask.value.toString().split(" ").join("")
+          ) {
             message(
               messageTow,
               "empty",
