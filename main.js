@@ -35,6 +35,13 @@ function creatTask(taskValue) {
   editBtn.onclick = () => {
     editeTask(editBtn);
   };
+  if (editBtn.innerHTML === "DONE") {
+    task.addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        editeTask(editBtn);
+      }
+    });
+  }
   // delete task
   deleteBtn.onclick = () => {
     deleteTask(deleteBtn);
@@ -71,7 +78,7 @@ function editeTask(e) {
     e.innerHTML = "DONE";
     e.parentElement.firstChild.focus();
     window.onbeforeunload = function () {
-      if (e.parentElement.firstChild.value === "") {
+      if (e.innerHTML === "DONE") {
         return "";
       }
     };
@@ -91,18 +98,31 @@ function editeTask(e) {
     if (e.parentElement.firstChild.value === "") {
       message(messageTow, "empty", "Task can't be empty");
     } else {
-      document.querySelectorAll("#edit").forEach((btn) => {
-        btn.style.setProperty("pointer-events", "visible");
-      });
-      e.innerHTML = "EDIT";
-      e.parentElement.firstChild.setAttribute("readonly", true);
-      let t = JSON.parse(localStorage.getItem("tasks"));
-      t.forEach((ele) => {
-        if (ele.name === "") {
-          ele.name = e.parentElement.firstChild.value;
+      let availableTasks = document.querySelectorAll(".task input");
+      availableTasks.forEach((availableTask) => {
+        if (availableTask !== e.parentElement.firstChild) {
+          if (e.parentElement.firstChild.value === availableTask.value) {
+            message(
+              messageTow,
+              "empty",
+              "there is already a task with the same name"
+            );
+          } else {
+            document.querySelectorAll("#edit").forEach((btn) => {
+              btn.style.setProperty("pointer-events", "visible");
+            });
+            e.innerHTML = "EDIT";
+            e.parentElement.firstChild.setAttribute("readonly", true);
+            let t = JSON.parse(localStorage.getItem("tasks"));
+            t.forEach((ele) => {
+              if (ele.name === "") {
+                ele.name = e.parentElement.firstChild.value;
+              }
+            });
+            localStorage.setItem("tasks", JSON.stringify(t));
+          }
         }
       });
-      localStorage.setItem("tasks", JSON.stringify(t));
     }
   }
 }
