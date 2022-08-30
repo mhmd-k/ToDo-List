@@ -74,33 +74,37 @@ button:active {
 h1 {
   color: var(--grey);
   font-weight: lighter;
+  margin-bottom: 0;
 }
-h1 + p,
-h2 + p {
-  background-color: #f44336;
+h1 + span,
+h2 + span {
   background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   text-align: center;
-  margin: 0;
+  display: block;
   font-weight: 700;
-  opacity: 0;
   transition: var(--transition);
   -webkit-transition: var(--transition);
   -moz-transition: var(--transition);
   -ms-transition: var(--transition);
   -o-transition: var(--transition);
-  height: 0;
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+  font-weight: lighter;
+  opacity: 0;
 }
-h1 + p.show,
-h2 + p.show {
+h1 + span.empty,
+h2 + span.empty {
   opacity: 1;
-  height: 20px;
+  background-color: #f44336;
+}
+h1 + span.added {
+  background-color: #4caf50;
+  opacity: 1;
 }
 .enter {
   display: flex;
   gap: 20px;
-  padding: 10px 0;
 }
 .enter input {
   padding: 15px 20px;
@@ -124,8 +128,6 @@ h2 + p.show {
 .tasks h2 {
   color: var(--grey);
   font-weight: lighter;
-}
-.tasks .content {
 }
 .content .task {
   display: flex;
@@ -169,4 +171,12 @@ h2 + p.show {
 }
 .content .task input:not(:read-only) {
   color: var(--pink);
+}
+#clear {
+  padding: 10px 20px;
+  display: none;
+  color: var(--light);
+}
+#clear.visible {
+  display: block;
 }
