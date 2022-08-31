@@ -35,13 +35,6 @@ function creatTask(taskValue) {
   editBtn.onclick = () => {
     editeTask(editBtn);
   };
-  if (editBtn.innerHTML === "DONE") {
-    task.addEventListener("keypress", (event) => {
-      if (event.key === "Enter") {
-        editeTask(editBtn);
-      }
-    });
-  }
   // delete task
   deleteBtn.onclick = () => {
     deleteTask(deleteBtn);
@@ -74,9 +67,16 @@ function deleteTask(e) {
 
 // edit task function
 function editeTask(e) {
+  let taskkName = e.parentElement.firstChild;
+  let availableTasks = Array.from(
+    document.querySelectorAll(".task input")
+  ).filter((at) => {
+    return at !== taskkName;
+  });
   if (e.innerHTML == "EDIT") {
+    e.nextElementSibling.style.setProperty("pointer-events", "none");
     e.innerHTML = "DONE";
-    e.parentElement.firstChild.focus();
+    taskkName.focus();
     window.onbeforeunload = function () {
       if (e.innerHTML === "DONE") {
         return "";
@@ -86,46 +86,61 @@ function editeTask(e) {
       btn.style.setProperty("pointer-events", "none");
     });
     e.style.setProperty("pointer-events", "visible");
-    e.parentElement.firstChild.removeAttribute("readonly");
+    taskkName.removeAttribute("readonly");
     let t = JSON.parse(localStorage.getItem("tasks"));
     t.forEach((ele) => {
-      if (ele.name === e.parentElement.firstChild.value) {
+      if (ele.name === taskkName.value) {
         ele.name = "";
       }
     });
     localStorage.setItem("tasks", JSON.stringify(t));
-  } else {
-    if (e.parentElement.firstChild.value === "") {
+  } else if (e.innerHTML === "DONE") {
+    if (taskkName.value === "") {
+      // if task is empty
       message(messageTow, "empty", "Task can't be empty");
-    } else {
-      let availableTasks = document.querySelectorAll(".task input");
-      availableTasks.forEach((availableTask) => {
-        if (availableTask !== e.parentElement.firstChild) {
-          if (
-            e.parentElement.firstChild.value.toString().split(" ").join("") ===
-            availableTask.value.toString().split(" ").join("")
-          ) {
-            message(
-              messageTow,
-              "empty",
-              "there is already a task with the same name"
-            );
-          } else {
-            document.querySelectorAll("#edit").forEach((btn) => {
-              btn.style.setProperty("pointer-events", "visible");
-            });
-            e.innerHTML = "EDIT";
-            e.parentElement.firstChild.setAttribute("readonly", true);
-            let t = JSON.parse(localStorage.getItem("tasks"));
-            t.forEach((ele) => {
-              if (ele.name === "") {
-                ele.name = e.parentElement.firstChild.value;
-              }
-            });
-            localStorage.setItem("tasks", JSON.stringify(t));
-          }
+    } else if (availableTasks.length === 0) {
+      // if we have only one task
+      e.innerHTML = "EDIT";
+      e.nextElementSibling.style.setProperty("pointer-events", "visible");
+      taskkName.setAttribute("readonly", true);
+      let t = JSON.parse(localStorage.getItem("tasks"));
+      t.forEach((ele) => {
+        if (ele.name === "") {
+          ele.name = taskkName.value;
         }
       });
+      localStorage.setItem("tasks", JSON.stringify(t));
+    } else {
+      // if we have more than one task
+      let alreadyExists = false;
+      availableTasks.forEach((at) => {
+        if (
+          taskkName.value.toString().split(" ").join("") ===
+          at.value.toString().split(" ").join("")
+        ) {
+          message(
+            messageTow,
+            "empty",
+            "there is already a task with the same name"
+          );
+          alreadyExists = true;
+        }
+      });
+      if (alreadyExists === false) {
+        document.querySelectorAll("#edit").forEach((btn) => {
+          btn.style.setProperty("pointer-events", "visible");
+        });
+        e.innerHTML = "EDIT";
+        e.nextElementSibling.style.setProperty("pointer-events", "visible");
+        taskkName.setAttribute("readonly", true);
+        let t = JSON.parse(localStorage.getItem("tasks"));
+        t.forEach((ele) => {
+          if (ele.name === "") {
+            ele.name = taskkName.value;
+          }
+        });
+        localStorage.setItem("tasks", JSON.stringify(t));
+      }
     }
   }
 }
@@ -139,15 +154,23 @@ function checkIfRepeated(contentDiv) {
     });
     let similar = false;
     tasksArray.forEach((e) => {
-      if (e === newTask.value) {
+      if (
+        e.toString().split(" ").join("") ===
+        newTask.value.toString().split(" ").join("")
+      ) {
         similar = true;
       }
     });
     if (similar === false) {
       creatTask(newTask.value);
       message(messageOne, "added", "Task has been added");
+    } else {
+      message(
+        messageOne,
+        "empty",
+        "There is already a task with the same name"
+      );
     }
-    message(messageOne, "empty", "There is already a task with the same name");
   } else {
     creatTask(newTask.value);
     message(messageOne, "added", "Task has been added");
@@ -172,15 +195,15 @@ newTask.addEventListener("keypress", function (event) {
     } else {
       checkIfRepeated(document.querySelector(".content"));
       newTask.value = "";
-      message(messageOne, "added", "Task has been added");
     }
   }
 });
 
 // delete all tasks
 clearBtn.addEventListener("click", () => {
-  document.querySelector(".content").innerHTML = "";
+  storageArray = [];
   localStorage.removeItem("tasks");
+  document.querySelector(".content").innerHTML = "";
   clearBtn.classList.remove("visible");
   message(messageOne, "added", "All tasks deleted");
 });
